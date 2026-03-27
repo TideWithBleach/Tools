@@ -3,7 +3,7 @@
 ## Run (Windows PowerShell 5.1)
 
 ```powershell
-powershell -NoProfile -ExecutionPolicy Bypass -Command "iex ((New-Object Net.WebClient).DownloadString('https://raw.githubusercontent.com/TideWithBleach/Tools/new/main/PowerShell/New-VMSwitch.ps1'))"
+powershell -NoProfile -ExecutionPolicy Bypass -Command "iex ((New-Object Net.WebClient).DownloadString('https://raw.githubusercontent.com/TideWithBleach/Tools/main/PowerShell/New-VMSwitch.ps1'))"
 ```
 
 ```powershell
