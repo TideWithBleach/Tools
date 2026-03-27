@@ -8,4 +8,5 @@ $uri = "https://raw.githubusercontent.com/TideWithBleach/Tools/main/PowerShell/N
 $out = Join-Path $env:TEMP "New-VMSwitch.ps1"
 Invoke-WebRequest -Uri $uri -OutFile $out -UseBasicParsing
 powershell.exe -NoProfile -ExecutionPolicy Bypass -File $out
+
 ```
