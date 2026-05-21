@@ -56,12 +56,6 @@
                     if ($match) { $inUseBy = $match.Name }
                 }
 
-                $vmspp = 'Unknown'
-                try {
-                    $b = Get-NetAdapterBinding -Name $nic.Name -ComponentID vms_pp -ErrorAction Stop
-                    $vmspp = $b.Enabled
-                } catch { }
-
                 [pscustomobject]@{
                     ComputerName            = $env:COMPUTERNAME
                     NicName                 = $nic.Name
@@ -70,7 +64,6 @@
                     Status                  = $nic.Status
                     LinkSpeed               = $nic.LinkSpeed
                     MacAddress              = $nic.MacAddress
-                    VmsPpEnabled            = $vmspp
                     InUseByExternalVSwitch  = $inUseBy
                 }
             }
@@ -92,8 +85,8 @@
         for ($i = 0; $i -lt $choices.Count; $i++) {
             $c = $choices[$i]
             $inUse = if ($c.InUseByExternalVSwitch) { "IN USE by External vSwitch: '$($c.InUseByExternalVSwitch)'" } else { "Free (no External vSwitch detected)" }
-            $vmspp = "vms_pp=$($c.VmsPpEnabled)"
-            Write-Host ("[{0}] Alias='{1}' | Name='{2}' | Status={3} | Speed={4} | {5} | {6}" -f ($i+1), $c.InterfaceAlias, $c.NicName, $c.Status, $c.LinkSpeed, $vmspp, $inUse)
+
+            Write-Host ("[{0}] Alias='{1}' | Name='{2}' | Status={3} | Speed={4} | {5}" -f ($i+1), $c.InterfaceAlias, $c.NicName, $c.Status, $c.LinkSpeed, $inUse)
             Write-Host ("     Desc: {0}" -f $c.InterfaceDescription) -ForegroundColor DarkGray
             Write-Host ("     MAC : {0}" -f $c.MacAddress) -ForegroundColor DarkGray
         }
@@ -156,18 +149,16 @@
         )
 
         $r = [ordered]@{
-            ComputerName         = $env:COMPUTERNAME
-            SwitchName           = $SwitchName
-            NicAlias             = $NicAlias
-            NicName              = $null
-            NicInterfaceDesc     = $null
-            NicStatus            = $null
-            VmsPpEnabled_Before  = $null
-            VmsPpEnabled_After   = $null
-            BoundToOtherSwitch   = $null
-            SwitchAction         = $null
-            Success              = $false
-            Error                = $null
+            ComputerName       = $env:COMPUTERNAME
+            SwitchName         = $SwitchName
+            NicAlias           = $NicAlias
+            NicName            = $null
+            NicInterfaceDesc   = $null
+            NicStatus          = $null
+            BoundToOtherSwitch = $null
+            SwitchAction       = $null
+            Success            = $false
+            Error              = $null
         }
 
         function Test-NicBoundToSwitch {
@@ -186,31 +177,6 @@
             $r.NicInterfaceDesc = $nic.InterfaceDescription
             $r.NicStatus        = $nic.Status
 
-            # vms_pp binding check/enable
-            $b = Get-NetAdapterBinding -Name $nic.Name -ComponentID vms_pp -ErrorAction Stop
-            $r.VmsPpEnabled_Before = $b.Enabled
-
-            if (-not $b.Enabled) {
-                Enable-NetAdapterBinding -Name $nic.Name -ComponentID vms_pp -ErrorAction SilentlyContinue | Out-Null
-                $b2 = Get-NetAdapterBinding -Name $nic.Name -ComponentID vms_pp -ErrorAction Stop
-                $r.VmsPpEnabled_After = $b2.Enabled
-
-                if (-not $b2.Enabled) {
-                    throw "vms_pp (Hyper-V Extensible Virtual Switch) is disabled and could not be enabled. NIC may be link-down, driver-enforced, or managed by policy/intent."
-                }
-            } else {
-                $r.VmsPpEnabled_After = $b.Enabled
-            }
-
-            # Block if NIC is bound to a different external switch
-            $external = @(Get-VMSwitch | Where-Object SwitchType -eq 'External')
-            $bound = foreach ($sw in $external) { if (Test-NicBoundToSwitch -VMSwitch $sw -Nic $nic) { $sw } }
-            $foreign = $bound | Where-Object Name -ne $SwitchName
-            if ($foreign) {
-                $r.BoundToOtherSwitch = ($foreign.Name -join ', ')
-                throw "NIC is already bound to another External vSwitch: $($r.BoundToOtherSwitch). Refusing to proceed."
-            }
-
             # If switch exists, validate binding
             $existing = Get-VMSwitch -Name $SwitchName -ErrorAction SilentlyContinue
             if ($existing) {
@@ -220,6 +186,14 @@
                 $r.SwitchAction = "AlreadyExistsAndBound"
                 $r.Success = $true
                 return [pscustomobject]$r
+            }
+
+            # Block if NIC is bound to ANY external switch
+            $external = @(Get-VMSwitch | Where-Object SwitchType -eq 'External')
+            $bound = foreach ($sw in $external) { if (Test-NicBoundToSwitch -VMSwitch $sw -Nic $nic) { $sw } }
+            if ($bound) {
+                $r.BoundToOtherSwitch = ($bound.Name -join ', ')
+                throw "NIC is already bound to an External vSwitch: $($r.BoundToOtherSwitch). Refusing to proceed."
             }
 
             # Create switch using NIC.Name (robust)
@@ -248,18 +222,16 @@
         }
         catch {
             $results += [pscustomobject]@{
-                ComputerName         = $p.Host
-                SwitchName           = $vmswitchname
-                NicAlias             = $p.NicAlias
-                NicName              = $null
-                NicInterfaceDesc     = $null
-                NicStatus            = $null
-                VmsPpEnabled_Before  = $null
-                VmsPpEnabled_After   = $null
-                BoundToOtherSwitch   = $null
-                SwitchAction         = $null
-                Success              = $false
-                Error                = "Invoke-Command failed: $($_.Exception.Message)"
+                ComputerName       = $p.Host
+                SwitchName         = $vmswitchname
+                NicAlias           = $p.NicAlias
+                NicName            = $null
+                NicInterfaceDesc   = $null
+                NicStatus          = $null
+                BoundToOtherSwitch = $null
+                SwitchAction       = $null
+                Success            = $false
+                Error              = "Invoke-Command failed: $($_.Exception.Message)"
             }
         }
     }
@@ -277,7 +249,7 @@
     $failed = @($results | Where-Object { -not $_.Success })
     if ($failed.Count -gt 0) {
         Write-Host "`nFAILED HOSTS DETAILS:" -ForegroundColor Red
-        $failed | Select-Object ComputerName, Error, NicAlias, NicName, NicStatus, VmsPpEnabled_Before, VmsPpEnabled_After, BoundToOtherSwitch | Format-List
+        $failed | Select-Object ComputerName, Error, NicAlias, NicName, NicStatus, BoundToOtherSwitch | Format-List
         throw "One or more hosts failed. Review FAILED HOSTS DETAILS above."
     }
 
