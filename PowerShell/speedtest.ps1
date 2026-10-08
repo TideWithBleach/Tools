@@ -65,8 +65,10 @@ if ($Mbps -ge $MinRequiredMbps) {
     Write-Host "Result: PASS - Speed meets minimum requirement of $MinRequiredMbps Mbps" -ForegroundColor Green
 } elseif ($Mbps -ge 10) {
     Write-Host "Result: WARNING - Speed meets Microsoft minimum (10 Mbps) but is below recommended $MinRequiredMbps Mbps" -ForegroundColor Yellow
+    Write-Host "For bandwidth requirements, see: https://learn.microsoft.com/en-us/azure/azure-local/concepts/system-requirements-disaggregated" -ForegroundColor Cyan
 } else {
     Write-Host "Result: FAIL - Speed is below both Microsoft minimum (10 Mbps) and recommended $MinRequiredMbps Mbps" -ForegroundColor Red
+    Write-Host "For bandwidth requirements, see: https://learn.microsoft.com/en-us/azure/azure-local/concepts/system-requirements-disaggregated" -ForegroundColor Cyan
 }
 
 Remove-Item $OutFile -Force
