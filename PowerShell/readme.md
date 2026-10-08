@@ -11,7 +11,7 @@ powershell.exe -NoProfile -ExecutionPolicy Bypass -File $out
 ```
 # speedtest.ps1
 This will prompt for input and download a 1GB file to test your internet speed through a proxy or without a proxy.
-![alt text](image.png)
+![alt text](Screenshot 2026-10-07 211307.png)
 ```powershell
 $uri = "https://raw.githubusercontent.com/TideWithBleach/Tools/main/PowerShell/speedtest.ps1"
 $out = Join-Path $env:TEMP "speedtest.ps1"
