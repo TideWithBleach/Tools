@@ -1,7 +1,7 @@
 # New-VMSwitch.ps1
 This will prompt for input and create a single VM Switch with a single NIC for a 2 node Azure Local Cluster
 
-![New-VMSwitch screenshot](New-VMSwitch.png)
+![New-VMSwitch screenshot][def]
 
 ```powershell
 $uri = "https://raw.githubusercontent.com/TideWithBleach/Tools/main/PowerShell/New-VMSwitch.ps1"
@@ -11,7 +11,7 @@ powershell.exe -NoProfile -ExecutionPolicy Bypass -File $out
 
 ```
 # speedtest.ps1
-This will prompt for input and download a 1GB file to test your internet speed through a proxy or without a proxy.
+This will prompt for input and download a 100MB file to test your internet speed through a proxy or without a proxy.
 
 For Azure Local bandwidth requirements, see: [Microsoft Learn - System Requirements](https://learn.microsoft.com/en-us/azure/azure-local/concepts/system-requirements-disaggregated)
 
@@ -23,3 +23,6 @@ $out = Join-Path $env:TEMP "speedtest.ps1"
 Invoke-WebRequest -Uri $uri -OutFile $out -UseBasicParsing
 powershell.exe -NoProfile -ExecutionPolicy Bypass -File $out
 ```
+
+
+[def]: New-VMSwitch.png

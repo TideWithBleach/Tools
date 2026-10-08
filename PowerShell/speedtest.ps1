@@ -2,7 +2,7 @@ Write-Host "========================================" -ForegroundColor Cyan
 Write-Host "Azure Local Network Speed Test" -ForegroundColor Cyan
 Write-Host "========================================" -ForegroundColor Cyan
 Write-Host ""
-Write-Host "This script tests your internet connection by downloading a 1GB test file" -ForegroundColor Gray
+Write-Host "This script tests your internet connection by downloading a 100MB test file" -ForegroundColor Gray
 Write-Host "and validates if it meets the bandwidth requirements for Azure Local deployment." -ForegroundColor Gray
 Write-Host "Recommended minimum: 20 Mbps (Microsoft minimum: 10 Mbps)" -ForegroundColor Gray
 Write-Host ""
@@ -29,8 +29,8 @@ switch ($choice) {
     }
 }
 
-$Url = 'https://proof.ovh.net/files/1Gb.dat'
-$OutFile = "$env:TEMP\1Gb.dat"
+$Url = 'https://proof.ovh.net/files/100Mb.dat'
+$OutFile = "$env:TEMP\100Mb.dat"
 
 if ($Proxy) {
     Write-Host "Downloading test file through proxy: $Proxy" -ForegroundColor Cyan
