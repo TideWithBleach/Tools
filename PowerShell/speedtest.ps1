@@ -55,7 +55,17 @@ $Mbps = [math]::Round(
 
 Write-Host ""
 Write-Host "Bytes Downloaded: $($file.Length)" -ForegroundColor Cyan
-Write-Host "Elapsed Time (sec): $([math]::Round($sw.Elapsed.TotalSeconds, 2))" -ForegroundColor Cyan
+
+$elapsed = $sw.Elapsed
+if ($elapsed.TotalHours -ge 1) {
+    $timeString = "$([math]::Floor($elapsed.TotalHours))h $($elapsed.Minutes)m $([math]::Round($elapsed.Seconds + $elapsed.Milliseconds/1000, 2))s"
+} elseif ($elapsed.TotalMinutes -ge 1) {
+    $timeString = "$($elapsed.Minutes)m $([math]::Round($elapsed.Seconds + $elapsed.Milliseconds/1000, 2))s"
+} else {
+    $timeString = "$([math]::Round($elapsed.TotalSeconds, 2))s"
+}
+Write-Host "Elapsed Time: $timeString" -ForegroundColor Cyan
+
 Write-Host "Download Speed (Mbps): $Mbps" -ForegroundColor Yellow
 
 $MinRequiredMbps = 20
