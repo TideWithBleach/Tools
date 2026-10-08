@@ -20,9 +20,10 @@ For Azure Local bandwidth requirements, see: [Microsoft Learn - System Requireme
 ```powershell
 $uri = "https://raw.githubusercontent.com/TideWithBleach/Tools/main/PowerShell/speedtest.ps1"
 $out = Join-Path $env:TEMP "speedtest.ps1"
-$Proxy = "http://lcpzen.fpl.com:10262" # Optional - leave empty for no proxy
+#$Proxy = "http://lcpzen.fpl.com:10262" # Optional - uncomment to use proxy
 Invoke-WebRequest -Uri $uri -OutFile $out -UseBasicParsing -Proxy $Proxy
 powershell.exe -NoProfile -ExecutionPolicy Bypass -File $out
+
 ```
 
 
