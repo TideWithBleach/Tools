@@ -1,5 +1,3 @@
-$ProgressPreference = 'SilentlyContinue'
-
 Write-Host "Select a proxy option:" -ForegroundColor Cyan
 Write-Host "1. http://lcpzen.fpl.com:10262" -ForegroundColor Gray
 Write-Host "2. http://gopzen.fpl.com:10262" -ForegroundColor Gray
@@ -31,18 +29,29 @@ if ($Proxy) {
 
 $sw = [System.Diagnostics.Stopwatch]::StartNew()
 
+$webClient = New-Object System.Net.WebClient
 if ($Proxy) {
-    Invoke-WebRequest `
-        -Uri $Url `
-        -Proxy $Proxy `
-        -OutFile $OutFile `
-        -UseBasicParsing
-} else {
-    Invoke-WebRequest `
-        -Uri $Url `
-        -OutFile $OutFile `
-        -UseBasicParsing
+    $webClient.Proxy = New-Object System.Net.WebProxy($Proxy)
 }
+
+$webClient.DownloadProgressChanged = {
+    $percent = [math]::Round($_.ProgressPercentage, 0)
+    $bytesReceived = [math]::Round($_.BytesReceived / 1MB, 2)
+    $totalBytes = [math]::Round($_.TotalBytesToReceive / 1MB, 2)
+    Write-Progress -Activity "Downloading test file" -Status "$bytesReceived MB of $totalBytes MB ($percent%)" -PercentComplete $percent
+}
+
+Register-ObjectEvent -InputObject $webClient -EventName DownloadProgressChanged -SourceIdentifier WebClient.ProgressChanged | Out-Null
+
+$webClient.DownloadFileAsync($Url, $OutFile)
+
+while ($webClient.IsBusy) {
+    Start-Sleep -Milliseconds 100
+}
+
+Write-Progress -Activity "Downloading test file" -Completed
+Unregister-Event -SourceIdentifier WebClient.ProgressChanged -ErrorAction SilentlyContinue
+$webClient.Dispose()
 
 $sw.Stop()
 
