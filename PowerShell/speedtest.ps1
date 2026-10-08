@@ -6,6 +6,9 @@ Write-Host "This script tests your internet connection by downloading a 1GB test
 Write-Host "and validates if it meets the bandwidth requirements for Azure Local deployment." -ForegroundColor Gray
 Write-Host "Recommended minimum: 20 Mbps (Microsoft minimum: 10 Mbps)" -ForegroundColor Gray
 Write-Host ""
+Write-Host "For bandwidth requirements, see:" -ForegroundColor Gray
+Write-Host "https://learn.microsoft.com/en-us/azure/azure-local/concepts/system-requirements-disaggregated" -ForegroundColor Cyan
+Write-Host ""
 Write-Host "Select a proxy option:" -ForegroundColor Cyan
 Write-Host "1. http://lcpzen.fpl.com:10262" -ForegroundColor Gray
 Write-Host "2. http://gopzen.fpl.com:10262" -ForegroundColor Gray
@@ -73,10 +76,8 @@ if ($Mbps -ge $MinRequiredMbps) {
     Write-Host "Result: PASS - Speed meets minimum requirement of $MinRequiredMbps Mbps" -ForegroundColor Green
 } elseif ($Mbps -ge 10) {
     Write-Host "Result: WARNING - Speed meets Microsoft minimum (10 Mbps) but is below recommended $MinRequiredMbps Mbps" -ForegroundColor Yellow
-    Write-Host "For bandwidth requirements, see: https://learn.microsoft.com/en-us/azure/azure-local/concepts/system-requirements-disaggregated" -ForegroundColor Cyan
 } else {
     Write-Host "Result: FAIL - Speed is below both Microsoft minimum (10 Mbps) and recommended $MinRequiredMbps Mbps" -ForegroundColor Red
-    Write-Host "For bandwidth requirements, see: https://learn.microsoft.com/en-us/azure/azure-local/concepts/system-requirements-disaggregated" -ForegroundColor Cyan
 }
 
 Remove-Item $OutFile -Force
