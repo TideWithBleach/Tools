@@ -1,3 +1,11 @@
+Write-Host "========================================" -ForegroundColor Cyan
+Write-Host "Azure Local Network Speed Test" -ForegroundColor Cyan
+Write-Host "========================================" -ForegroundColor Cyan
+Write-Host ""
+Write-Host "This script tests your internet connection by downloading a 1GB test file" -ForegroundColor Gray
+Write-Host "and validates if it meets the bandwidth requirements for Azure Local deployment." -ForegroundColor Gray
+Write-Host "Recommended minimum: 20 Mbps (Microsoft minimum: 10 Mbps)" -ForegroundColor Gray
+Write-Host ""
 Write-Host "Select a proxy option:" -ForegroundColor Cyan
 Write-Host "1. http://lcpzen.fpl.com:10262" -ForegroundColor Gray
 Write-Host "2. http://gopzen.fpl.com:10262" -ForegroundColor Gray
