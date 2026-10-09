@@ -32,10 +32,15 @@ switch ($choice) {
 $Url = 'https://proof.ovh.net/files/100Mb.dat'
 $OutFile = "$env:TEMP\100Mb.dat"
 
+$hostname = $env:COMPUTERNAME
+$ipAddress = (Get-NetIPAddress -AddressFamily IPv4 | Where-Object { $_.InterfaceAlias -notlike "*Loopback*" -and $_.IPAddress -notlike "127.*" -and $_.IPAddress -notlike "169.254.*" } | Select-Object -First 1).IPAddress
+
 if ($Proxy) {
     Write-Host "Downloading test file through proxy: $Proxy" -ForegroundColor Cyan
+    Write-Host "Hostname: $hostname | IP: $ipAddress" -ForegroundColor Gray
 } else {
     Write-Host "Downloading test file (no proxy)..." -ForegroundColor Cyan
+    Write-Host "Hostname: $hostname | IP: $ipAddress" -ForegroundColor Gray
 }
 
 $sw = [System.Diagnostics.Stopwatch]::StartNew()
