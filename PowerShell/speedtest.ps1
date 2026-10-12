@@ -29,6 +29,35 @@ switch ($choice) {
     }
 }
 
+Write-Host ""
+Write-Host "Select number of parallel connections:" -ForegroundColor Cyan
+Write-Host "1. 1 connection (single-threaded)" -ForegroundColor Gray
+Write-Host "2. 2 connections" -ForegroundColor Gray
+Write-Host "3. 4 connections (default, recommended)" -ForegroundColor Gray
+Write-Host "4. 8 connections" -ForegroundColor Gray
+Write-Host "5. Custom number" -ForegroundColor Gray
+$threadChoice = Read-Host "Enter your choice (1-5)"
+
+switch ($threadChoice) {
+    "1" { $threads = 1 }
+    "2" { $threads = 2 }
+    "3" { $threads = 4 }
+    "4" { $threads = 8 }
+    "5" {
+        $customThreads = Read-Host "Enter number of connections (1-16)"
+        if ($customThreads -match '^\d+$' -and $customThreads -ge 1 -and $customThreads -le 16) {
+            $threads = [int]$customThreads
+        } else {
+            Write-Host "Invalid number. Using 4 connections." -ForegroundColor Yellow
+            $threads = 4
+        }
+    }
+    default {
+        Write-Host "Invalid choice. Using 4 connections." -ForegroundColor Yellow
+        $threads = 4
+    }
+}
+
 $Url = 'https://files.hexaqa.com/size/100mb.bin'
 $OutFile = "$env:TEMP\100mb.bin"
 
@@ -101,7 +130,7 @@ $Mbps = [math]::Round(
 )
 
 Write-Host ""
-Write-Host "Bytes Downloaded: $totalBytes (multi-threaded: $threads connections)" -ForegroundColor Cyan
+Write-Host "Bytes Downloaded: $totalBytes (connections: $threads)" -ForegroundColor Cyan
 
 $elapsed = $sw.Elapsed
 if ($elapsed.TotalHours -ge 1) {
