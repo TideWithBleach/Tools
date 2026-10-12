@@ -72,11 +72,12 @@ if ($Proxy) {
     Write-Host "Hostname: $hostname | IP: $ipAddress" -ForegroundColor Gray
 }
 
-# Multi-threaded download using 4 parallel connections
-$threads = 4
+Write-Host "Using $threads parallel connections..." -ForegroundColor Gray
+Write-Host ""
+
 $sw = [System.Diagnostics.Stopwatch]::StartNew()
 
-# Download file 4 times in parallel to simulate multi-threaded download
+# Download file in parallel to simulate multi-threaded download
 $jobs = @()
 for ($i = 0; $i -lt $threads; $i++) {
     $tempFile = "$env:TEMP\100mb_$i.bin"
