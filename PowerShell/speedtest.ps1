@@ -32,18 +32,14 @@ switch ($choice) {
 Write-Host ""
 Write-Host "Select number of parallel connections:" -ForegroundColor Cyan
 Write-Host "1. 1 connection (single-threaded)" -ForegroundColor Gray
-Write-Host "2. 2 connections" -ForegroundColor Gray
-Write-Host "3. 4 connections (default, recommended)" -ForegroundColor Gray
-Write-Host "4. 8 connections" -ForegroundColor Gray
-Write-Host "5. Custom number" -ForegroundColor Gray
-$threadChoice = Read-Host "Enter your choice (1-5)"
+Write-Host "2. 4 connections (default, recommended)" -ForegroundColor Gray
+Write-Host "3. Custom number" -ForegroundColor Gray
+$threadChoice = Read-Host "Enter your choice (1-3)"
 
 switch ($threadChoice) {
     "1" { $threads = 1 }
-    "2" { $threads = 2 }
-    "3" { $threads = 4 }
-    "4" { $threads = 8 }
-    "5" {
+    "2" { $threads = 4 }
+    "3" {
         $customThreads = Read-Host "Enter number of connections (1-16)"
         if ($customThreads -match '^\d+$' -and $customThreads -ge 1 -and $customThreads -le 16) {
             $threads = [int]$customThreads
