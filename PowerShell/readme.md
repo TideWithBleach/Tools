@@ -11,7 +11,7 @@ powershell.exe -NoProfile -ExecutionPolicy Bypass -File $out
 
 ```
 # speedtest.ps1
-This will prompt for input and download a 100MB file to test your internet speed through a proxy or without a proxy. The test file is served from a CDN that automatically routes to the nearest edge location for accurate results.
+This will prompt for input and download a 100MB file to test your internet speed through a proxy or without a proxy. The test file is served from a CDN that automatically routes to the nearest edge location for accurate results. Uses multi-threaded download (4 parallel connections) for more accurate speed measurements.
 
 For Azure Local bandwidth requirements, see: [Microsoft Learn - System Requirements](https://learn.microsoft.com/en-us/azure/azure-local/concepts/system-requirements-disaggregated)
 

@@ -43,25 +43,50 @@ if ($Proxy) {
     Write-Host "Hostname: $hostname | IP: $ipAddress" -ForegroundColor Gray
 }
 
+# Multi-threaded download using 4 parallel connections
+$threads = 4
 $sw = [System.Diagnostics.Stopwatch]::StartNew()
 
-if ($Proxy) {
-    Invoke-WebRequest -Uri $Url -Proxy $Proxy -OutFile $OutFile -UseBasicParsing
-} else {
-    Invoke-WebRequest -Uri $Url -OutFile $OutFile -UseBasicParsing
+# Download file 4 times in parallel to simulate multi-threaded download
+$jobs = @()
+for ($i = 0; $i -lt $threads; $i++) {
+    $tempFile = "$env:TEMP\100mb_$i.bin"
+    $job = Start-Job -ScriptBlock {
+        param($url, $outFile, $proxy)
+        if ($proxy) {
+            Invoke-WebRequest -Uri $url -Proxy $proxy -OutFile $outFile -UseBasicParsing
+        } else {
+            Invoke-WebRequest -Uri $url -OutFile $outFile -UseBasicParsing
+        }
+    } -ArgumentList $Url, $tempFile, $Proxy
+    $jobs += $job
 }
+
+# Wait for all jobs to complete
+$jobs | ForEach-Object { $_ | Wait-Job | Out-Null }
 
 $sw.Stop()
 
-$file = Get-Item $OutFile
+# Calculate total bytes downloaded
+$totalBytes = 0
+for ($i = 0; $i -lt $threads; $i++) {
+    $tempFile = "$env:TEMP\100mb_$i.bin"
+    if (Test-Path $tempFile) {
+        $totalBytes += (Get-Item $tempFile).Length
+        Remove-Item $tempFile -Force
+    }
+}
+
+# Cleanup jobs
+$jobs | ForEach-Object { Remove-Job $_ }
 
 $Mbps = [math]::Round(
-    (($file.Length * 8) / $sw.Elapsed.TotalSeconds) / 1MB,
+    (($totalBytes * 8) / $sw.Elapsed.TotalSeconds) / 1MB,
     2
 )
 
 Write-Host ""
-Write-Host "Bytes Downloaded: $($file.Length)" -ForegroundColor Cyan
+Write-Host "Bytes Downloaded: $totalBytes (multi-threaded: $threads connections)" -ForegroundColor Cyan
 
 $elapsed = $sw.Elapsed
 if ($elapsed.TotalHours -ge 1) {
@@ -84,5 +109,3 @@ if ($Mbps -ge $MinRequiredMbps) {
 } else {
     Write-Host "Result: FAIL - Speed is below both Microsoft minimum (10 Mbps) and recommended $MinRequiredMbps Mbps" -ForegroundColor Red
 }
-
-Remove-Item $OutFile -Force
