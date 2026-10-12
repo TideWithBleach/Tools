@@ -10,17 +10,17 @@ Write-Host "For bandwidth requirements, see:" -ForegroundColor Gray
 Write-Host "https://learn.microsoft.com/en-us/azure/azure-local/concepts/system-requirements-disaggregated" -ForegroundColor Cyan
 Write-Host ""
 Write-Host "Select a proxy option:" -ForegroundColor Cyan
-Write-Host "1. http://lcpzen.fpl.com:10262" -ForegroundColor Gray
-Write-Host "2. http://gopzen.fpl.com:10262" -ForegroundColor Gray
-Write-Host "3. http://pzen.fpl.com:10262" -ForegroundColor Gray
+Write-Host "1. http://pzen.fpl.com:10262" -ForegroundColor Gray
+Write-Host "2. http://lcpzen.fpl.com:10262" -ForegroundColor Gray
+Write-Host "3. http://gopzen.fpl.com:10262" -ForegroundColor Gray
 Write-Host "4. No proxy" -ForegroundColor Gray
 Write-Host "5. Enter a custom proxy" -ForegroundColor Gray
 $choice = Read-Host "Enter your choice (1-5)"
 
 switch ($choice) {
-    "1" { $Proxy = 'http://lcpzen.fpl.com:10262' }
-    "2" { $Proxy = 'http://gopzen.fpl.com:10262' }
-    "3" { $Proxy = 'http://pzen.fpl.com:10262' }
+    "1" { $Proxy = 'http://pzen.fpl.com:10262' }
+    "2" { $Proxy = 'http://lcpzen.fpl.com:10262' }
+    "3" { $Proxy = 'http://gopzen.fpl.com:10262' }
     "4" { $Proxy = $null }
     "5" { $Proxy = Read-Host "Enter custom proxy URL (e.g., http://proxy.example.com:8080)" }
     default {
