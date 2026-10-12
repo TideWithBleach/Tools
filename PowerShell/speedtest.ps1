@@ -62,7 +62,22 @@ for ($i = 0; $i -lt $threads; $i++) {
     $jobs += $job
 }
 
-# Wait for all jobs to complete
+# Wait for all jobs to complete with progress display
+$completed = 0
+while ($completed -lt $threads) {
+    $completed = 0
+    foreach ($job in $jobs) {
+        if ($job.State -eq 'Completed') {
+            $completed++
+        }
+    }
+    $percent = [math]::Round(($completed / $threads) * 100)
+    Write-Progress -Activity "Multi-threaded download in progress" -Status "Completed $completed of $threads connections" -PercentComplete $percent
+    Start-Sleep -Milliseconds 200
+}
+Write-Progress -Activity "Multi-threaded download in progress" -Completed
+
+# Ensure all jobs are fully complete
 $jobs | ForEach-Object { $_ | Wait-Job | Out-Null }
 
 $sw.Stop()
