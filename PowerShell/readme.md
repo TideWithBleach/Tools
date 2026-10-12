@@ -15,7 +15,7 @@ This will prompt for input and download a 100MB file to test your internet speed
 
 For Azure Local bandwidth requirements, see: [Microsoft Learn - System Requirements](https://learn.microsoft.com/en-us/azure/azure-local/concepts/system-requirements-disaggregated)
 
-<img alt="speedtest screenshot" src="Screenshot 2026-10-07 211307.png" />
+<img alt="speedtest screenshot" src="AzureLocalSpeedTest.png" />
 
 ```powershell
 $uri = "https://raw.githubusercontent.com/TideWithBleach/Tools/main/PowerShell/speedtest.ps1"
