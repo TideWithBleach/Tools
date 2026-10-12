@@ -29,8 +29,8 @@ switch ($choice) {
     }
 }
 
-$Url = 'https://proof.ovh.net/files/100Mb.dat'
-$OutFile = "$env:TEMP\100Mb.dat"
+$Url = 'https://files.hexaqa.com/size/100mb.bin'
+$OutFile = "$env:TEMP\100mb.bin"
 
 $hostname = $env:COMPUTERNAME
 $ipAddress = (Get-NetIPAddress -AddressFamily IPv4 | Where-Object { $_.InterfaceAlias -notlike "*Loopback*" -and $_.IPAddress -notlike "127.*" -and $_.IPAddress -notlike "169.254.*" } | Select-Object -First 1).IPAddress
