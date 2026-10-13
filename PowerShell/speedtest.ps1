@@ -141,9 +141,9 @@ Write-Host "Elapsed Time: $timeString" -ForegroundColor Cyan
 
 Write-Host "Download Speed (Mbps): $Mbps" -ForegroundColor Yellow
 
-$MinRequiredMbps = 20
+$RecommendedMbps = 20
 
-if ($Mbps -ge $MinRequiredMbps) {
+if ($Mbps -ge $RecommendedMbps) {
     Write-Host "Result: PASS - Speed of $Mbps Mbps meets Microsoft minimum (10 Mbps) and recommended (20 Mbps)" -ForegroundColor Green
 } elseif ($Mbps -ge 10) {
     Write-Host "Result: WARNING - Speed of $Mbps Mbps meets Microsoft minimum (10 Mbps) but is less than the recommended (20 Mbps)" -ForegroundColor Yellow
