@@ -144,9 +144,9 @@ Write-Host "Download Speed (Mbps): $Mbps" -ForegroundColor Yellow
 $MinRequiredMbps = 20
 
 if ($Mbps -ge $MinRequiredMbps) {
-    Write-Host "Result: PASS - Speed meets Microsoft minimum (10 Mbps) and recommended ($MinRequiredMbps Mbps)" -ForegroundColor Green
+    Write-Host "Result: PASS - Speed of $Mbps Mbps meets Microsoft minimum (10 Mbps) and recommended (20 Mbps)" -ForegroundColor Green
 } elseif ($Mbps -ge 10) {
-    Write-Host "Result: WARNING - Speed meets Microsoft minimum (10 Mbps) but is below recommended $MinRequiredMbps Mbps" -ForegroundColor Yellow
+    Write-Host "Result: WARNING - Speed of $Mbps Mbps meets Microsoft minimum (10 Mbps) but is less than the recommended (20 Mbps)" -ForegroundColor Yellow
 } else {
-    Write-Host "Result: FAIL - Speed is below both Microsoft minimum (10 Mbps) and recommended $MinRequiredMbps Mbps" -ForegroundColor Red
+    Write-Host "Result: FAIL - Speed of $Mbps Mbps is below both Microsoft minimum (10 Mbps) and recommended (20 Mbps)" -ForegroundColor Red
 }
