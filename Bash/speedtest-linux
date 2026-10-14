@@ -8,6 +8,20 @@ CYAN='\033[0;36m'
 GRAY='\033[0;90m'
 NC='\033[0m' # No Color
 
+# Check for required dependencies
+check_dependency() {
+    if ! command -v "$1" &> /dev/null; then
+        echo -e "${RED}Error: $1 is not installed${NC}"
+        echo -e "${YELLOW}Install it using: sudo dnf install $1${NC}"
+        exit 1
+    fi
+}
+
+check_dependency "curl"
+check_dependency "bc"
+check_dependency "stat"
+check_dependency "hostname"
+
 echo -e "${CYAN}========================================"
 echo -e "${CYAN}Azure Local Network Speed Test"
 echo -e "${CYAN}========================================${NC}"

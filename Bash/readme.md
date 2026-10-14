@@ -36,6 +36,13 @@ chmod +x /tmp/speedtest-linux
 - curl
 - bc (for floating point calculations)
 - stat (for file size)
+- hostname
+
+The script will automatically check for these dependencies and provide installation instructions if any are missing. On RHEL, install missing dependencies with:
+
+```bash
+sudo dnf install curl bc
+```
 
 ### Azure Local Bandwidth Requirements
 
